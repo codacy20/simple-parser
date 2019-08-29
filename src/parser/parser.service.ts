@@ -5,11 +5,11 @@ import { ICheck } from './interfaces/check.interface';
 
 @Injectable()
 export class ParserService {
-  transactions: ITransaction[];
+  healthyTransactions: ITransaction[];
   faultyTransactions: ITransaction[];
   checks: ICheck;
   constructor() {
-    this.transactions = [];
+    this.healthyTransactions = [];
     this.faultyTransactions = [];
     this.checks = { balance: false, transactionReference: false };
   }
@@ -18,21 +18,19 @@ export class ParserService {
     transactionList: TransactionDto[],
   ): Promise<ITransaction[]> {
     this.checkTransaction(transactionList);
-    return this.transactions;
+    return this.faultyTransactions;
   }
 
   public checkTransaction(transactionList: ITransaction[]): ITransaction[] {
     transactionList.forEach(element => {
-      if (element) {
-        this.checks.transactionReference = this.checkTransactionReference(
-          element,
-        );
-        this.checks.balance = this.checkBalance(element);
-        if (this.checks.balance || this.checks.transactionReference) {
-          this.faultyTransactions.push(element);
-        } else {
-          this.transactions.push(element);
-        }
+      this.checks.transactionReference = this.checkTransactionReference(
+        element,
+      );
+      this.checks.balance = this.checkBalance(element);
+      if (this.checks.balance || this.checks.transactionReference) {
+        this.faultyTransactions.push(element);
+      } else {
+        this.healthyTransactions.push(element);
       }
     });
     return transactionList;
@@ -40,13 +38,10 @@ export class ParserService {
 
   private checkTransactionReference(transaction: ITransaction) {
     let check = false;
-    if (this.transactions.length === 0) {
-      this.transactions.push(transaction);
-    }
     // tslint:disable-next-line: prefer-for-of
-    for (let index = 0; index < this.transactions.length; index++) {
+    for (let index = 0; index < this.healthyTransactions.length; index++) {
       if (
-        this.transactions[index].transactionReference ===
+        this.healthyTransactions[index].transactionReference ===
         transaction.transactionReference
       ) {
         check = true;
@@ -57,7 +52,7 @@ export class ParserService {
 
   private checkBalance(element: ITransaction): boolean {
     let check = false;
-    if (element.startBalance < element.endBalance || element.endBalance < 0) {
+    if (element.endBalance < 0) {
       check = true;
     } else {
       check = false;
@@ -66,6 +61,6 @@ export class ParserService {
   }
 
   public async findAll(): Promise<ITransaction[]> {
-    return this.transactions;
+    return this.faultyTransactions;
   }
 }
