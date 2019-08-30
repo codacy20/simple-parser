@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { ParserService } from './parser.service';
 import { TransactionDto } from '../parser/dto/transactionDto.dto';
 import { ITransaction } from '../parser/interfaces/transaction.interface';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('parser')
 export class ParserController {
@@ -10,6 +18,12 @@ export class ParserController {
   @Get()
   async findAll(): Promise<ITransaction[]> {
     return this.parserService.findAll();
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('fileKey'))
+  uploadFile(@UploadedFile() file) {
+    console.log(file);
   }
 
   @Post()
