@@ -40,13 +40,11 @@ export class ParserService {
     let check = false;
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.healthyTransactions.length; index++) {
-      if (
-        this.healthyTransactions[index].transactionReference ===
-        transaction.transactionReference
-      ) {
+      if (this.healthyTransactions[index].reference === transaction.reference) {
         check = true;
       }
     }
+    console.log('check Refrene ' + check + ' ' + transaction.reference);
     return check;
   }
 
@@ -57,6 +55,7 @@ export class ParserService {
     } else {
       check = false;
     }
+    console.log('check Balance ' + check);
     return check;
   }
 
