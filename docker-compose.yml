@@ -1,0 +1,11 @@
+version: '3'
+services:
+  web-client:
+    image: 'amirkiumarsi/www-simpleparser'
+    ports:
+      - '4200:4200'
+
+  web-server:
+    image: 'amirkiumarsi/simple-parser'
+    ports:
+      - '3000:3000'
