@@ -2,7 +2,7 @@ export interface ITransaction {
   accountNumber: string;
   description: string;
   endBalance: number;
-  mutation: string;
+  mutation: number;
   reference: number;
   startBalance: number;
 }

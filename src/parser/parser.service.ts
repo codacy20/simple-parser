@@ -44,18 +44,32 @@ export class ParserService {
         check = true;
       }
     }
-    console.log('check Refrene ' + check + ' ' + transaction.reference);
     return check;
   }
 
   private checkBalance(element: ITransaction): boolean {
     let check = false;
+    const startAbs = Math.abs(element.startBalance);
+    const mutationAbs = Math.abs(element.mutation);
+    const endAbs = Math.abs(element.endBalance);
+    let endRounded = 0;
+
+    if (element.mutation > 0) {
+      endRounded = Math.round((startAbs + mutationAbs) * 100) / 100;
+    } else {
+      endRounded = Math.round((startAbs - mutationAbs) * 100) / 100;
+    }
+
     if (element.endBalance < 0) {
       check = true;
     } else {
-      check = false;
+      if (endRounded === endAbs) {
+        check = false;
+      } else {
+        check = true;
+      }
     }
-    console.log('check Balance ' + check);
+
     return check;
   }
 

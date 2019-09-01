@@ -2,7 +2,7 @@ export class TransactionDto {
   accountNumber: string;
   description: string;
   endBalance: number;
-  mutation: string;
+  mutation: number;
   reference: number;
   startBalance: number;
 }
